@@ -15,10 +15,134 @@
 
 variable "project_id" {
   type = string
-  description = "Project ID in which resources will be deployed"
+}
+
+variable "ccai_insights_project_id" {
+  type = string
 }
 
 variable "region" {
   type = string
-  description = "Region in which resources will be deployed"
 }
+
+variable "env" {
+  type = string
+}
+
+variable "insights_endpoint" {
+  type = string
+}
+
+variable "insights_api_version" {
+  type = string
+}
+
+variable "ccai_insights_location_id" {
+  type = string
+  description = "Location ID of CCAI Insights"
+}
+
+variable "pipeline_name" {
+  type = string
+}
+
+variable "hash_key" {
+  type = string
+}
+
+variable "recognizer_path" {
+  type = string
+}
+
+variable "model_name" {
+  type = string
+  default = "gemini-1.5-flash-002"
+  description = "Name of the Gemini Model to be used in the Cloud Function"
+}
+
+variable "hash_secret_name" {
+  type = string
+  description = "Name or ID of the secret for the hashing key"
+}
+
+variable "bq_external_connection_name" {
+  type = string
+}
+
+variable "dataset_name" {
+  type = string
+  description = "BigQuery Dataset name"
+}
+
+variable "feedback_table_name" {
+  type = string
+  description = "BigQuery feedback table name"
+}
+
+variable "scorecard_id" {
+  type = string
+  description = "CCAI Insights Scorecard ID"
+}
+
+variable "stt_function_name" {
+  type = string
+  description = "Name of the STT cf name"
+  default = "insmed-stt-transcript-call"
+}
+
+variable "genai_function_name" {
+  type = string
+  description = "Name of the GenAI word fix"
+  default = "insmed-genai-key-word-fix"
+}
+
+variable "feedback_generator_function_name" {
+  type = string
+  description = "Name of the Feedback Generator function"
+  default = "insmed-feedback-generator"
+}
+
+variable "export_to_bq_function_name" {
+  type = string
+  description = "Name of the export to BigQuery function"
+  default = "export-to-bq-incremental"
+}
+
+variable "audio_format_change_function_name" {
+  type = string
+  description = "Name of the audio format change function"
+  default = "insmed-audio-format-change"
+}
+
+variable "redacted_audios_bucket_name" {
+  type = string
+  description = "Bucket to store redacted audio files"
+  default = "insmed-redacted-audio-files"
+}
+
+variable "target_tags" {
+  type = string
+  description = "Comma-separated list of target tags"
+  default = "tag1,tag2" 
+}
+
+variable "target_values" {
+  type = string
+  description = "Comma-separated list of target tags"
+  default = "val1,val2" 
+}
+
+variable "client_specific_constraints" {
+  type = string
+  description = "Client specific contraints for GenAI prompt"
+} 
+
+variable "client_specific_context" {
+  type = string
+  description = "Client specific context for GenAI prompt"
+} 
+
+variable "few_shot_examples" {
+  type = string
+  description = "Few examples of correct transcripts for the GenAI prompt"
+} 

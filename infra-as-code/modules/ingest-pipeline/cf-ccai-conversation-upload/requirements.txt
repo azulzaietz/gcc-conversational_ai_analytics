@@ -12,6 +12,17 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-terraform {
-  required_version = "~> 1.9.8"
-}
+functions-framework==3.*
+google-cloud-contact-center-insights
+google-cloud-storage
+google-cloud-speech
+google-cloud-dlp
+Flask==3.0.3
+gunicorn==22.0.0
+Werkzeug==3.0.3
+google.cloud.logging==3.11.0
+Flask[async]
+pyarrow==17.0.0
+pandas==2.2.3
+fastparquet==2024.5.0
+google-api-core==2.23.0

@@ -2,3 +2,5 @@ functions-framework==3.*
 requests
 google-auth
 google-cloud-bigquery
+pandas
+db-dtypes==1.0.2
