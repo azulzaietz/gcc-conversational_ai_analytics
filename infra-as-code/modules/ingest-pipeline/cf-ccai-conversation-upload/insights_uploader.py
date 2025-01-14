@@ -206,7 +206,7 @@ class InsightsUploader:
         print("File name: {}".format(transcript_file_name))
 
         transcript_uri = self.get_gcs_uri(transcript_bucket_name, transcript_file_name)
-        audio_uri = self.get_gcs_uri("insmed-redacted-audio-files", event_filename)
+        audio_uri = self.get_gcs_uri("redacted-audio-files", event_filename)
         metadata = self.get_audiofile_metadata(event_bucket, event_filename)
 
         record_keeper = RecordKeeper(self.ingest_record_bucket_id, event.get('five9_filename'))

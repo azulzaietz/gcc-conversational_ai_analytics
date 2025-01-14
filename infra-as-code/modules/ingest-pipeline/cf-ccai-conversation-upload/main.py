@@ -46,6 +46,7 @@ def main(request):
     ccai_insights_project_id = os.environ.get('CCAI_INSIGHTS_PROJECT_ID')
     ccai_insights_location_id = os.environ.get('CCAI_INSIGHTS_LOCATION_ID') 
     ingest_record_bucket_id = os.environ.get('INGEST_RECORD_BUCKET_ID')
+    redacted_audios_bucket_name = os.environ.get('REDACTED_AUDIOS_BUCKET_NAME')
 
     uploader = InsightsUploader(project_id, insights_endpoint, insights_api_version, ccai_insights_project_id, ccai_insights_location_id, ingest_record_bucket_id)
     operation_name = uploader.upload(event)

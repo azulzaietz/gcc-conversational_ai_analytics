@@ -79,7 +79,7 @@ class RecordKeeper:
       blob.download_to_filename('/tmp/ingest_filename_record.parquet')
       self.ingest_record_df = pd.read_parquet('/tmp/ingest_filename_record.parquet')
     else:
-      raise Exception('Parquet file could not be found exists')
+      raise Exception('Parquet file could not be found')
 
   def create_error_record(self, error_message):
     current_timestamp = datetime.now()
@@ -91,6 +91,5 @@ class RecordKeeper:
 
   def replace_row(self, new_row):
     self.verify_file()
-    self.ingest_record_df.loc[self.ingest_record_df["filename"] == self.five9_filename] = new_row
     self.upload_record(self.ingest_record_df)
     return self.ingest_record_df

@@ -1,9 +1,9 @@
 ## Create the Buckets
 Incoming raw audio files from Five9 are GSM6.10 wave file format. Format change is required to be ingested by CCAI Speech-to-text. Outputs of the script will be stored in separate buckets different from the landing bucket.
 
-`insmed-five9-audio-files`: Landing bucket for the raw Five9 audio files
-`insmed-formatted-audio-files`: Intermediate bucket to store formatted audio files
-`insmed-formatted-audio-metadata`: Intermediate bucket to store formatted audio metadata
+`five9-audio-files`: Landing bucket for the raw Five9 audio files
+`formatted-audio-files`: Intermediate bucket to store formatted audio files
+`formatted-audio-metadata`: Intermediate bucket to store formatted audio metadata
 
 Two buckets are needed for the output as CCAI Insights requires metadata to be stored in a different bucket.
 
@@ -21,12 +21,12 @@ As this variable is not supported, the default service account used is the Defau
 |---|---|:---:|:---:|:---:|:---:|
 |project_id|Project ID in which the resources will be provisioned|`string`|Yes|||
 |region|Region in which the resources will be provisioned|`string`|Yes||`us-central1`|
-|formatted_audio_bucket_id|Bucket ID where the formatted audio files will be stored|`string`|Yes||`insmed-formatted-audio-files`|
-|metadata_bucket_id|Bucket ID where the formatted audio metadata will be stored|`string`|Yes||`insmed-formatted-audio-metadata`|
+|formatted_audio_bucket_id|Bucket ID where the formatted audio files will be stored|`string`|Yes||`formatted-audio-files`|
+|metadata_bucket_id|Bucket ID where the formatted audio metadata will be stored|`string`|Yes||`formatted-audio-metadata`|
 |number_of_channels|Number of channels from the raw audio files|`number`|Yes|`2`||
 |service_account_email|Service Account used as identity by the Cloud Function|`string`|Yes|||
 |cf_bucket_name|Bucket name to use for storing the Cloud Function bundle|`string`|Yes|||
-|function_name|Cloud Function name|`string`|Yes||`insmed-audio-format-change`|
-|trigger_bucket_name|Name of the bucket which triggers the Cloud Function|`string`|Yes||`insmed-five9-audio-files`|
-|hex_key| Name of the secret in secret manager for the hashing key value| `string` | Yes |  | `insmed-five9-filename-key` |
-|ingest_record_bucket_id|Bucket ID where the parquet for record keeping is|`string`|Yes||`insmed-ingest-record-bucket`|
+|function_name|Cloud Function name|`string`|Yes||`audio-format-change`|
+|trigger_bucket_name|Name of the bucket which triggers the Cloud Function|`string`|Yes||`five9-audio-files`|
+|hex_key| Name of the secret in secret manager for the hashing key value| `string` | Yes |  | `five9-filename-key` |
+|ingest_record_bucket_id|Bucket ID where the parquet for record keeping is|`string`|Yes||`ingest-record-bucket`|

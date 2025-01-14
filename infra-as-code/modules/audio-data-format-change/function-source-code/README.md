@@ -47,7 +47,7 @@ google-cloud-logging==3.11.0
 | `stream.duration` | Duration of the audio stream in seconds | `string` | `"270.133333"` |
 | `stream.bits_per_raw_sample` | Bits per raw audio sample | `string` | `"0"` |
 | `encoder` | Encoder used to create the audio file | `string` | `"Lavf59.27.100"` |
-| `case_manager_email` | Email address extracted from the filename | `string` | `"test@insmed.com"` |
+| `case_manager_email` | Email address extracted from the filename | `string` | `"test@test.com"` |
 | `create_date` | Date extracted from the filename | `string` | `"2024-09-19"` |
 | `patient_id` | Patient phone number extracted from filename and hashed | `string` ||
 

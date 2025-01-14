@@ -389,7 +389,7 @@ class AudioFormatterRunner:
     self.record_keeper = RecordKeeper(self.ingest_record_bucket_id, self.metadata['five9_filename'], self.storage_client)
     
     try:
-      #self.record_keeper.verify_file(self.metadata['case_manager_email'])
+      self.record_keeper.verify_file()
       print(f'New assigned filename: {filename}')
       if(self.format_audio(filename, trigger_file)):
         #Successfully changed format
@@ -398,23 +398,20 @@ class AudioFormatterRunner:
       else: 
         #Unsuccessful format change, write on error and delete from processed
         print('Unsucessful')
-        # self.record_keeper.replace_row(
-        #   self.record_keeper.create_error_record(
-        #     f'An error ocurred while changing audio format: {self.get_ffmpeg_error()}')) 
-        # self.log_error()
+        self.record_keeper.replace_row(
+          self.record_keeper.create_error_record(
+            f'An error ocurred while changing audio format: {self.get_ffmpeg_error()}')) 
+        self.log_error()
     except Exception as e:
       match str(e):
-        case 'No case manager email in filename':
-          self.record_keeper.add_row(self.record_keeper.create_no_case_manager_record())
-          self.log_error(str(e), "WARNING")
-        case 'Repeated file with no case manager email':
-          self.log_error(str(e), "WARNING")
-        case 'File is processing or was already processed':
-          self.log_error(str(e), "WARNING")
+        # case 'Repeated file with no case manager email':
+        #   self.log_error(str(e), "WARNING")
+        # case 'File is processing or was already processed':
+        #   self.log_error(str(e), "WARNING")
         case _:
-          # self.record_keeper.replace_row(
-          #   self.record_keeper.create_error_record(
-          #     f'An error ocurred while changing audio format: {str(e)}')) 
+          self.record_keeper.replace_row(
+            self.record_keeper.create_error_record(
+              f'An error ocurred while changing audio format: {str(e)}')) 
           self.log_error(str(e))
 
     self.delete_tmp_files()

@@ -107,6 +107,7 @@ module "cf_conversation_upload" {
     CCAI_INSIGHTS_PROJECT_ID = var.ccai_insights_project_id
     CCAI_INSIGHTS_LOCATION_ID = var.ccai_insights_location_id
     INGEST_RECORD_BUCKET_ID = var.ingest_record_bucket_id
+    REDACTED_AUDIOS_BUCKET_NAME = var.redacted_audios_bucket_name
   }
 }
 
@@ -198,7 +199,7 @@ resource "google_data_loss_prevention_inspect_template" "custom" {
                 exclusion_rule {
                     dictionary {
                         word_list {
-                            words = ["Insmed", "Arikayce", "Arikares"]
+                            words = [""]
                         }
                     }
                     matching_type = "MATCHING_TYPE_FULL_MATCH"

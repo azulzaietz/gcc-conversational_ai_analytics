@@ -60,6 +60,15 @@ class AudioRedaction:
             print("3) Upload redacted audio to corresponding bucket in GCS")
             self.upload_file_to_gcs(redacted_audios_bucket_name, f"/tmp/{tmp_audio_file}", audio_file_name)
 
+
+            print(json_file)
+            with tempfile.NamedTemporaryFile(mode="w", delete=False) as tmp_json_file:
+                json.dump(json_file, tmp_json_file, indent=4)
+                tmp_json_file_name = tmp_json_file.name
+
+            print("4) Upload modified JSON file to GCS")
+            self.upload_file_to_gcs(self.bucket_name, tmp_json_file_name, self.transcript_file_name) 
+
         except Exception as e:
             print(f"An error occurred: {e}")
 

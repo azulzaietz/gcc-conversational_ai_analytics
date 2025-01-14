@@ -5,6 +5,7 @@ import pandas as pd
 import pyarrow as pa
 from datetime import datetime   
 from google.api_core import retry 
+from google.cloud import storage
 
 class RecordKeeper:
   ingest_record_bucket_id: str
@@ -74,7 +75,7 @@ class RecordKeeper:
     self.upload_to_gcs(bucket_name=self.ingest_record_bucket_id, 
                          filename='ingest_filename_record.parquet') 
 
-  def verify_file(self, case_manager_email):
+  def verify_file(self):
     """Verifies if parquet file exists, if it doesn't it creates the parquet file
         to later call check_current_file
 
@@ -93,10 +94,10 @@ class RecordKeeper:
       self.ingest_record_df = pd.read_parquet('/tmp/ingest_filename_record.parquet')
     else: 
       print('Parquet does not exists')
-      columns = ["occurrence_timestamp", "filename", "includes_case_manager_email", "processed", "error", "error_message"]
+      columns = ["occurrence_timestamp", "filename", "processed", "error", "error_message"]
       self.ingest_record_df = pd.DataFrame(columns=columns)      
 
-    return self.check_current_file(case_manager_email)
+    return self.check_current_file()
 
   def add_row(self, row_content):
     """Adds a row to dataframe
@@ -121,7 +122,6 @@ class RecordKeeper:
     current_timestamp = datetime.now()
     record = { "occurrence_timestamp": [str(current_timestamp)],
                "filename": [self.five9_filename],
-               "includes_case_manager_email": [False],
                "processed": [False],
                "error": [False],
                "error_message": [None] }
@@ -136,7 +136,6 @@ class RecordKeeper:
     current_timestamp = datetime.now()
     record = { "occurrence_timestamp": [str(current_timestamp)],
                "filename": [self.five9_filename],
-               "includes_case_manager_email": [True],
                "processed": [True],
                "error": [False],
                "error_message": [None] }
@@ -172,11 +171,10 @@ class RecordKeeper:
     Returns:
         pandas.DataFrame: updated dataframe
     """
-    self.ingest_record_df.loc[self.ingest_record_df["filename"] == self.five9_filename] = new_row
     self.upload_record(self.ingest_record_df)
     return self.ingest_record_df
 
-  def check_current_file(self, case_manager_email):
+  def check_current_file(self):
     """Verifies the current filename to see if was processed 
        or complies with business requirements
 
@@ -191,26 +189,28 @@ class RecordKeeper:
     Returns:
         pandas.DataFrame: dataframe for the parquet file
     """
-    print('Checking if file was already processed')
-    if (case_manager_email is None):
-      #Ignore and add to parquet and log error
-      print('No case manager')
-      if(self.five9_filename in self.ingest_record_df["filename"].values):
-        raise Exception('Repeated file with no case manager email')
-      else:
-        raise Exception('No case manager email in filename')
-    if (self.five9_filename in self.ingest_record_df["filename"].values):
-      if (self.ingest_record_df.loc[self.ingest_record_df["filename"] == self.five9_filename, "processed"].values[0] == True):
-        #Ignore and log error
-        print('Repeated file')
-        raise Exception('File is processing or was already processed')
-      else:
-        if (self.ingest_record_df.loc[self.ingest_record_df["filename"] == self.five9_filename, "includes_case_manager_email"].values[0] == True):
-          print('Will re process file')
-          return self.replace_row(self.create_re_processed_record()) 
-    else: 
-      print('Will process file')
-      self.add_row(self.create_processed_record())
-      return self.ingest_record_df
+    # --------------------------------------------------------------------
+    #TODO: Add logic to avoid repeated files being processed in case needed.
+
+    # print('Checking if file was already processed')
+    #   if(self.five9_filename in self.ingest_record_df["filename"].values):
+    #     raise Exception('Repeated file with no case manager email')
+    #   else:
+    #     raise Exception('No case manager email in filename')
+    # if (self.five9_filename in self.ingest_record_df["filename"].values):
+    #   if (self.ingest_record_df.loc[self.ingest_record_df["filename"] == self.five9_filename, "processed"].values[0] == True):
+    #     #Ignore and log error
+    #     print('Repeated file')
+    #     raise Exception('File is processing or was already processed')
+    #   else:
+    #     if (self.ingest_record_df.loc[self.ingest_record_df["filename"] == self.five9_filename].values[0] == True):
+    #       print('Will re process file')
+    #       return self.replace_row(self.create_re_processed_record()) 
+    # else: 
+    # --------------------------------------------------------------------
+
+    print('Will process file')
+    self.add_row(self.create_processed_record())
+    return self.ingest_record_df
   
   

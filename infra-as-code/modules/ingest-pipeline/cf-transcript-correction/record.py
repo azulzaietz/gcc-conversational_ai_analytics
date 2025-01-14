@@ -91,6 +91,5 @@ class RecordKeeper:
 
   def replace_row(self, new_row):
     self.verify_file()
-    self.ingest_record_df.loc[self.ingest_record_df["filename"] == self.five9_filename] = new_row
     self.upload_record(self.ingest_record_df)
     return self.ingest_record_df

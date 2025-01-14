@@ -28,7 +28,7 @@ data "google_project" "project" {
 module "transcript_bucket" {
   source     = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/gcs?ref=v31.1.0&depth=1"
   project_id = var.project_id
-  name     = "insmed-stt-transcript-${random_id.bucket_ext.id}-${var.env}"
+  name     = "stt-transcript-${random_id.bucket_ext.id}-${var.env}"
   location = "US"
   versioning = true
 }
@@ -86,7 +86,7 @@ module "ccai_insights_ingest_pipeline" {
 module "trigger_bucket" {
   source     = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/gcs?ref=v31.1.0&depth=1"
   project_id = var.project_id
-  name     = "insmed-five9-audio-files-${random_id.bucket_ext.id}-${var.env}"
+  name     = "five9-audio-files-${random_id.bucket_ext.id}-${var.env}"
   location = var.region # The trigger must be in the same location as the bucket
   storage_class = "REGIONAL"
   versioning = true
@@ -95,7 +95,7 @@ module "trigger_bucket" {
 module "formatted_bucket" {
   source     = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/gcs?ref=v31.1.0&depth=1"
   project_id = var.project_id
-  name     = "insmed-formatted-audio-files-${random_id.bucket_ext.id}-${var.env}"
+  name     = "formatted-audio-files-${random_id.bucket_ext.id}-${var.env}"
   location = var.region 
   storage_class = "REGIONAL"
   versioning = true
@@ -104,7 +104,7 @@ module "formatted_bucket" {
 module "meta_bucket" {
   source     = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/gcs?ref=v31.1.0&depth=1"
   project_id = var.project_id
-  name     = "insmed-formatted-audio-metadata-${random_id.bucket_ext.id}-${var.env}"
+  name     = "formatted-audio-metadata-${random_id.bucket_ext.id}-${var.env}"
   location = var.region 
   storage_class = "REGIONAL"
   versioning = true
@@ -145,7 +145,7 @@ module "audio_data_format_change" {
 module "ingest_record_bucket" {
   source     = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/gcs?ref=v31.1.0&depth=1"
   project_id = var.project_id
-  name     = "insmed-ingest-record-bucket-${random_id.bucket_ext.id}-${var.env}"
+  name     = "ingest-record-bucket-${random_id.bucket_ext.id}-${var.env}"
   location = var.region 
   storage_class = "REGIONAL"
   versioning = true

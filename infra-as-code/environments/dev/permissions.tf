@@ -92,7 +92,7 @@ module "ccai_insights_sa_2" {
   count = var.project_id == var.ccai_insights_project_id ? 0 : 1
   source     = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/iam-service-account?ref=v31.1.0&depth=1"
   project_id = var.ccai_insights_project_id
-  name       = "insmed-ccai-cm-sa-2"
+  name       = "asset-ccai-cm-sa-2"
 
   # non-authoritative roles granted *to* the service accounts on other resources
   iam_project_roles = {

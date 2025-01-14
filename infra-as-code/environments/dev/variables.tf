@@ -87,19 +87,19 @@ variable "scorecard_id" {
 variable "stt_function_name" {
   type = string
   description = "Name of the STT cf name"
-  default = "insmed-stt-transcript-call"
+  default = "stt-transcript-call"
 }
 
 variable "genai_function_name" {
   type = string
   description = "Name of the GenAI word fix"
-  default = "insmed-genai-key-word-fix"
+  default = "genai-key-word-fix"
 }
 
 variable "feedback_generator_function_name" {
   type = string
   description = "Name of the Feedback Generator function"
-  default = "insmed-feedback-generator"
+  default = "feedback-generator"
 }
 
 variable "export_to_bq_function_name" {
@@ -111,13 +111,13 @@ variable "export_to_bq_function_name" {
 variable "audio_format_change_function_name" {
   type = string
   description = "Name of the audio format change function"
-  default = "insmed-audio-format-change"
+  default = "audio-format-change"
 }
 
 variable "redacted_audios_bucket_name" {
   type = string
   description = "Bucket to store redacted audio files"
-  default = "insmed-redacted-audio-files"
+  default = "redacted-audio-files"
 }
 
 variable "target_tags" {
