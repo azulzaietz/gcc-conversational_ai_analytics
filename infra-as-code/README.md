@@ -62,11 +62,11 @@ insights_api_version = "v1"
 env = "dev"
 ccai_insights_project_id = "<ccai_project_id>
 ccai_insights_location_id = "us-central1"
-pipeline_name = "insmed-ingest-pipeline"
+pipeline_name = "ingest-pipeline"
 recognizer_path = "projects/case-manager-ai-assistant-dev/locations/global/recognizers/stt-call-recognizer"
 hash_key = "<hash_key>"
-hash_secret_name = "insmed-five9-filename-key"
-bq_external_connection_name = "insmed-ccai-pipeline-record"
+hash_secret_name = "five9-filename-key"
+bq_external_connection_name = "ccai-pipeline-record"
 dataset_name = "ccai_insights_export"
 feedback_table_name = "coaching_feedback"
 scorecard_id = "<scorecard_id>"
@@ -84,7 +84,7 @@ scorecard_id = "<scorecard_id>"
 
 9. Run the bash scripts in the Utils folder. `bash utils/update-settings.sh` to change the template to a project level.
 10. Run the [analyze settings](utils/analyze-setting.sh) in the Utils folder with `bash utils/analyze-setting.sh` to update the analysis annotator settings for CCAI Insights. 
-11. Create the tables for feedback, CCAI export and staging according to [create-tables.sql](utils/create-tables.sql). **Important**: It is recommended to create the export table by manually exporting in CCAI as schema might change, clone the table for staging and modify `MERGE` in [export](modules/ingest-pipeline/cf-export-to-bq-incremental/lib.py). Only create the external table for the parquet file if it exists in the bucket `insmed-ingest-record-bucket`.
+11. Create the tables for feedback, CCAI export and staging according to [create-tables.sql](utils/create-tables.sql). **Important**: It is recommended to create the export table by manually exporting in CCAI as schema might change, clone the table for staging and modify `MERGE` in [export](modules/ingest-pipeline/cf-export-to-bq-incremental/lib.py). Only create the external table for the parquet file if it exists in the bucket `ingest-record-bucket`.
 
 ## Dual project settings
 Project is configure to work as a single project or dual project. Audio file processing and transcription which includes PII would be part of `project_id` whereas non-PII data would be deployed on the `ccai_insights_project_id`, which only includes CCAI and its export to BigQuery
@@ -92,11 +92,9 @@ Project is configure to work as a single project or dual project. Audio file pro
 If `ccai_insights_project_id` is equal to `project_id` then terraform with work as if it is one single project. Otherwise it will create a service account for the CCAI project where it will be deployed separately. 
 
 ## Start testing
-**Prerequisites:** 
-- Ingested filenames should follow this structure `[mm_dd_yyyy]/[10-digit phone number] [case manager email] [hh_mm_ss AM/PM].[file extension]` Any other additional metadata in the filename should be separated by a space and not any other special characters. Example: `9_27_2024/1112325589 by email@insmed.com @ 12_18_29 AM.wav` 
 
 **Execution:**
-- Cloud Function is triggered through an EventArc when a `google.cloud.storage.object.v1.finalized` event occurs. To start testing, send a **dual-channel** audio file to the trigger bucket `insmed-five9-audio-files.*`. This will trigger the cloud function to change the audio file format to a supported format by Cloud Speech and upload the conversation into CCAI, each conversation will have their ID and Cloud Storage audio blob associated.
+- Cloud Function is triggered through an EventArc when a `google.cloud.storage.object.v1.finalized` event occurs. To start testing, send a **dual-channel** audio file to the trigger bucket `five9-audio-files.*`. This will trigger the cloud function to change the audio file format to a supported format by Cloud Speech and upload the conversation into CCAI, each conversation will have their ID and Cloud Storage audio blob associated.
  
 If any input file is located in a different bucket, they could be transferred through gsutil with the following command: 
 
@@ -116,12 +114,12 @@ Where the destination bucket is the bucket created by terraform under the module
 |insights_api_version| CCAI API version | `string` | Yes | | `v1` |
 |ccai_insights_project_id| ID of Google Project where CCAI is| `string` | Yes | | `case-manager-ai-assistant` |
 |ccai_insights_location_id| Location ID for CCAI Insights | `string` | Yes | | `us-central1` | 
-|pipeline_name| Name of the pipeline | `string` | Yes | | `insmed-data-pipeline` |
+|pipeline_name| Name of the pipeline | `string` | Yes | | `data-pipeline` |
 |hash_key| Hexadecimal string key to be used for hashing | `string` | Yes | | `8c99c71b18acf58cea54e613e8d140909ced8c3eda4a93b6d1673cf9a7d3bdf8` |
 |recognizer_path| Complete path of the recognizer created with the bash script. Must follow structure: `projects/{PROJECT_ID}/locations/global/recognizers/{RECOGNIZER_NAME}` | `string` | Yes | | `projects/my-project-id/locations/global/recognizers/recognizer-name` |
 |model_name| Name of the model to use in Gemini call| `string` | Yes | `gemini-1.5-flash-002` | `gemini-1.5-flash-002` |
-|hash_secret_name| Name of the secret in secret manager for the hashing key value| `string` | Yes |  | `insmed-five9-filename-key` |
-|bq_external_connection_name| Name of the external connection created in BigQuery | `string` | Yes |  | `insmed-ccai-pipeline-record` |
+|hash_secret_name| Name of the secret in secret manager for the hashing key value| `string` | Yes |  | `five9-filename-key` |
+|bq_external_connection_name| Name of the external connection created in BigQuery | `string` | Yes |  | `ccai-pipeline-record` |
 |dataset_name| BigQuery dataset name | `string` | Yes |  | `ccai_insights` |
 |feedback_table_name| BigQuery table name to store feedback | `string` | Yes |  | `coaching_feedback` |
 |scorecard_id| ID of the QAI scorecard to use a base for feedback instructions | `string` | Yes |  | `242501912243980191` |
