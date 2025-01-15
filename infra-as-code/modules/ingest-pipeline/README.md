@@ -16,10 +16,13 @@ This Cloud Function calls Cloud Speech-to-Text (STT) to generate transcripts fro
 ### 4. `cf-transcript-correction`
 This Cloud Function utilizes a Vertex AI generative model (Gemini) to correct key business terms within the generated transcripts, ensuring accuracy and consistency.
 
-### 5. `cf-feedback-generator`
+### 5. `cf_audio_redaction`
+This Cloud Function utilizes the FFmpeg library to redact sensitive information from audio files. It achieves this by reducing the volume to zero for any segments identified by DLP findings. This ensures that sensitive data is removed before the audio is uploaded or further processed.
+
+### 6. `cf-feedback-generator`
 Triggered after a conversation is uploaded into CCAI and analyzed, this Cloud Function identifies specific Quality Assurance (QA) questions that the agent needs feedback on based on their performance. Feedback for these questions is generated using the Vertex AI generative model. Finally, the feedback is exported to a BigQuery table.
 
-### 6. `cf-export-to-bq-incremental`
+### 7. `cf-export-to-bq-incremental`
 This Cloud Function is triggered every 15 minutes to perform the following:
 - Runs a SQL query on the main CCAI table (if the table doesn't exist, it performs a full load) to determine the latest analysis date.
 - Uses the latest analysis date to filter the time range for the CCAI Insights export service to BigQuery. (Note: The table needs to exist before running the export service.)
