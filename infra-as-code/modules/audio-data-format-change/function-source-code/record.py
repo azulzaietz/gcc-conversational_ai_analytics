@@ -9,19 +9,19 @@ from google.cloud import storage
 
 class RecordKeeper:
   ingest_record_bucket_id: str
-  five9_filename: str
+  original_file_name: str
   storage_client = None
   ingest_record_df = None
   
   def __init__(
     self, 
     ingest_record_bucket_id,
-    five9_filename,
+    original_file_name,
     storage_client = None
     ):
 
     self.ingest_record_bucket_id = ingest_record_bucket_id
-    self.five9_filename = five9_filename
+    self.original_file_name = original_file_name
     if storage_client is None:
       creds = self.get_credentials()
       self.storage_client = storage.Client(project = self.project_id, credentials = creds)
@@ -121,7 +121,7 @@ class RecordKeeper:
     """
     current_timestamp = datetime.now()
     record = { "occurrence_timestamp": [str(current_timestamp)],
-               "filename": [self.five9_filename],
+               "filename": [self.original_file_name],
                "processed": [False],
                "error": [False],
                "error_message": [None] }
@@ -135,7 +135,7 @@ class RecordKeeper:
     """
     current_timestamp = datetime.now()
     record = { "occurrence_timestamp": [str(current_timestamp)],
-               "filename": [self.five9_filename],
+               "filename": [self.original_file_name],
                "processed": [True],
                "error": [False],
                "error_message": [None] }
@@ -148,7 +148,7 @@ class RecordKeeper:
         list: list of new values
     """
     current_timestamp = datetime.now()
-    return [str(current_timestamp), self.five9_filename, True, True, False, None]
+    return [str(current_timestamp), self.original_file_name, True, True, False, None]
 
   def create_error_record(self, error_message):
     """Generates a new row to replace existing if error happens
@@ -160,7 +160,7 @@ class RecordKeeper:
         list: list of new values
     """
     current_timestamp = datetime.now()
-    return [str(current_timestamp), self.five9_filename, True, False, True, error_message]
+    return [str(current_timestamp), self.original_file_name, True, False, True, error_message]
 
   def replace_row(self, new_row):
     """Replaces the value of a row 
@@ -193,17 +193,17 @@ class RecordKeeper:
     #TODO: Add logic to avoid repeated files being processed in case needed.
 
     # print('Checking if file was already processed')
-    #   if(self.five9_filename in self.ingest_record_df["filename"].values):
+    #   if(self.original_file_name in self.ingest_record_df["filename"].values):
     #     raise Exception('Repeated file with no case manager email')
     #   else:
     #     raise Exception('No case manager email in filename')
-    # if (self.five9_filename in self.ingest_record_df["filename"].values):
-    #   if (self.ingest_record_df.loc[self.ingest_record_df["filename"] == self.five9_filename, "processed"].values[0] == True):
+    # if (self.original_file_name in self.ingest_record_df["filename"].values):
+    #   if (self.ingest_record_df.loc[self.ingest_record_df["filename"] == self.original_file_name, "processed"].values[0] == True):
     #     #Ignore and log error
     #     print('Repeated file')
     #     raise Exception('File is processing or was already processed')
     #   else:
-    #     if (self.ingest_record_df.loc[self.ingest_record_df["filename"] == self.five9_filename].values[0] == True):
+    #     if (self.ingest_record_df.loc[self.ingest_record_df["filename"] == self.original_file_name].values[0] == True):
     #       print('Will re process file')
     #       return self.replace_row(self.create_re_processed_record()) 
     # else: 

@@ -310,8 +310,8 @@ class CoachingFeedbackGenerator:
             dict: coaching feedback 
         """
         conversation = self.get_transcript()
-        five9_filename = conversation['labels']['five9_filename']
-        self.record_keeper = RecordKeeper(self.ingest_record_bucket_id, five9_filename, self.storage_client)
+        original_file_name = conversation['labels']['original_file_name']
+        self.record_keeper = RecordKeeper(self.ingest_record_bucket_id, original_file_name, self.storage_client)
         
         try:
             transcript = conversation['transcript']['transcriptSegments']

@@ -107,8 +107,8 @@ class InsightsUploader:
             metadata['qualityMetadata'] = {"agentInfo":[{"agentId": "Undefined"}]}
             metadata['agentId'] = "Undefined"
             metadata['labels'] = dict()
-            if 'five9_filename' in blob.metadata: 
-                metadata['labels']['five9_filename'] = blob.metadata['five9_filename']
+            if 'original_file_name' in blob.metadata: 
+                metadata['labels']['original_file_name'] = blob.metadata['original_file_name']
             if 'patient_id' in blob.metadata:
                 metadata['labels']['patient_phone_number'] = blob.metadata['patient_id']
             if 'categories' in blob.metadata:
@@ -209,7 +209,7 @@ class InsightsUploader:
         audio_uri = self.get_gcs_uri("redacted-audio-files", event_filename)
         metadata = self.get_audiofile_metadata(event_bucket, event_filename)
 
-        record_keeper = RecordKeeper(self.ingest_record_bucket_id, event.get('five9_filename'))
+        record_keeper = RecordKeeper(self.ingest_record_bucket_id, event.get('original_file_name'))
 
         if not audio_uri:
             print('No audio to ingest')

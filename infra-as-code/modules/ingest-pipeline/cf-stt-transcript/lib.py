@@ -20,7 +20,7 @@ class SpeechToTextCaller:
   formatted_audio_bucket_id: str
   formatted_audio_file_name: str
   recognizer_path: str
-  five9_filename: str
+  original_file_name: str
   event_dict = dict()
 
   storage_client = None
@@ -47,7 +47,7 @@ class SpeechToTextCaller:
 
     self.get_audiofile_metadata(formatted_audio_bucket_id, formatted_audio_file_name)
 
-    self.record_keeper = RecordKeeper(ingest_record_bucket_id, self.five9_filename, self.storage_client) 
+    self.record_keeper = RecordKeeper(ingest_record_bucket_id, self.original_file_name, self.storage_client) 
 
     print(f'Starting transcript on: {self.formatted_audio_file_name}')
 
@@ -96,7 +96,7 @@ class SpeechToTextCaller:
     print("Blob: {}".format(blob))
 
     if blob.metadata:
-      self.five9_filename =  blob.metadata['five9_filename']
+      self.original_file_name =  blob.metadata['original_file_name']
       print("Retrieved metadata from file")
     else: 
       print("Unable to retrieve metadata")
@@ -192,7 +192,7 @@ class SpeechToTextCaller:
     self.event_dict['transcript_filename'] = transcript_filename
     self.event_dict['event_bucket'] = self.formatted_audio_bucket_id
     self.event_dict['event_filename'] = self.formatted_audio_file_name
-    self.event_dict['five9_filename'] = self.five9_filename
+    self.event_dict['original_file_name'] = self.original_file_name
 
     self.order_transcript(transcript_bucket, transcript_filename)
 

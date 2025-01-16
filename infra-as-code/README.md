@@ -65,7 +65,7 @@ ccai_insights_location_id = "us-central1"
 pipeline_name = "ingest-pipeline"
 recognizer_path = "projects/case-manager-ai-assistant-dev/locations/global/recognizers/stt-call-recognizer"
 hash_key = "<hash_key>"
-hash_secret_name = "five9-filename-key"
+hash_secret_name = "original-filename-key"
 bq_external_connection_name = "ccai-pipeline-record"
 dataset_name = "ccai_insights_export"
 feedback_table_name = "coaching_feedback"
@@ -94,7 +94,7 @@ If `ccai_insights_project_id` is equal to `project_id` then terraform with work 
 ## Start testing
 
 **Execution:**
-- Cloud Function is triggered through an EventArc when a `google.cloud.storage.object.v1.finalized` event occurs. To start testing, send a **dual-channel** audio file to the trigger bucket `five9-audio-files.*`. This will trigger the cloud function to change the audio file format to a supported format by Cloud Speech and upload the conversation into CCAI, each conversation will have their ID and Cloud Storage audio blob associated.
+- Cloud Function is triggered through an EventArc when a `google.cloud.storage.object.v1.finalized` event occurs. To start testing, send a **dual-channel** audio file to the trigger bucket `original-audio-files.*`. This will trigger the cloud function to change the audio file format to a supported format by Cloud Speech and upload the conversation into CCAI, each conversation will have their ID and Cloud Storage audio blob associated.
  
 If any input file is located in a different bucket, they could be transferred through gsutil with the following command: 
 
@@ -118,7 +118,7 @@ Where the destination bucket is the bucket created by terraform under the module
 |hash_key| Hexadecimal string key to be used for hashing | `string` | Yes | | `8c99c71b18acf58cea54e613e8d140909ced8c3eda4a93b6d1673cf9a7d3bdf8` |
 |recognizer_path| Complete path of the recognizer created with the bash script. Must follow structure: `projects/{PROJECT_ID}/locations/global/recognizers/{RECOGNIZER_NAME}` | `string` | Yes | | `projects/my-project-id/locations/global/recognizers/recognizer-name` |
 |model_name| Name of the model to use in Gemini call| `string` | Yes | `gemini-1.5-flash-002` | `gemini-1.5-flash-002` |
-|hash_secret_name| Name of the secret in secret manager for the hashing key value| `string` | Yes |  | `five9-filename-key` |
+|hash_secret_name| Name of the secret in secret manager for the hashing key value| `string` | Yes |  | `original-filename-key` |
 |bq_external_connection_name| Name of the external connection created in BigQuery | `string` | Yes |  | `ccai-pipeline-record` |
 |dataset_name| BigQuery dataset name | `string` | Yes |  | `ccai_insights` |
 |feedback_table_name| BigQuery table name to store feedback | `string` | Yes |  | `coaching_feedback` |

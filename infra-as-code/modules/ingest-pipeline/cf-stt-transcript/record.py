@@ -9,19 +9,19 @@ from google.api_core import retry
 
 class RecordKeeper:
   ingest_record_bucket_id: str
-  five9_filename: str
+  original_file_name: str
   storage_client = None
   ingest_record_df = None
   
   def __init__(
     self, 
     ingest_record_bucket_id,
-    five9_filename,
+    original_file_name,
     storage_client = None
     ):
 
     self.ingest_record_bucket_id = ingest_record_bucket_id
-    self.five9_filename = five9_filename
+    self.original_file_name = original_file_name
     if storage_client is None:
       creds = self.get_credentials()
       self.storage_client = storage.Client(credentials = creds)
@@ -83,11 +83,11 @@ class RecordKeeper:
 
   def create_error_record(self, error_message):
     current_timestamp = datetime.now()
-    return [str(current_timestamp), self.five9_filename, True, False, True, error_message]
+    return [str(current_timestamp), self.original_file_name, True, False, True, error_message]
   
   def create_processed_record(self):
     current_timestamp = datetime.now()
-    return [str(current_timestamp), self.five9_filename, True, True, False, None]
+    return [str(current_timestamp), self.original_file_name, True, True, False, None]
 
   def replace_row(self, new_row):
     self.verify_file()

@@ -7,7 +7,7 @@ This project provides a tool for formatting any raw audio files format supported
 1. **Download:** Downloads the raw audio file from a Google Cloud Storage (GCS) bucket.
 2. **Format:** Converts the raw audio to FLAC format using FFmpeg, ensuring the desired number of channels.
 3. **Metadata Extraction:** Extracts audio stream metadata (codec, sample rate, etc.) using FFprobe.
-4. **File Metadata Extraction:** Extracts metadata from the filename, such as case manager email and creation date.
+4. **File Metadata Extraction:** Extracts metadata from the filename.
 5. **Metadata Creation:** Creates a JSON file containing all extracted metadata.
 6. **Upload:** Uploads the formatted audio and metadata JSON to specified GCS buckets.
 7. **Error Handling:** Logs FFmpeg errors to Google Cloud Logging.
@@ -17,7 +17,6 @@ This project provides a tool for formatting any raw audio files format supported
 
 1. **Prerequisites:**
     - Google Cloud project with necessary permissions
-    - Ingested filenames should follow this structure `[10-digit phone number] [case manager email] [timestamp].[file extension]` Any other additional metadata in the filename should be separated by a space and not any other special characters. Example: `9999999999 test@domain.com 2024-09-19T15:52:58Z.wav` 
 2. **Configuration:**
     - Set the corresponding environment variables for the Cloud Function. For more information about the variables [click this documentation](../README.md)
 3. **Execution:**

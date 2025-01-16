@@ -94,7 +94,7 @@ class AudioFormatterRunner:
     new_uuid = str(uuid.uuid4())
     new_filename = f'{new_uuid}.{self.raw_audio_file_extension}'
     
-    self.metadata['five9_filename'] = hmac.new(self.hash_key, trigger_file.encode(), encoding).hexdigest()
+    self.metadata['original_file_name'] = hmac.new(self.hash_key, trigger_file.encode(), encoding).hexdigest()
     self.metadata['conversation_id']= new_uuid
 
     filename = f'/tmp/{new_filename}'
@@ -194,67 +194,6 @@ class AudioFormatterRunner:
           if 'encoder' in line:
             self.metadata['encoder'] = line.split('=')[1].strip()
 
-  def get_case_manager_from_filename(self, trigger_filename):
-    """Uses regex to search for the case manager email
-        sets the metadata for case manager email as None if is not found
-
-    Args:
-        trigger_filename (str): Raw filename from Five9
-    """
-    pattern = r'[\w.+-]+@[\w-]+\.[\w.-]+' 
-
-    match = re.search(pattern, trigger_filename)
-    self.metadata['case_manager_email'] = match.group(0) if match else None
-
-  def get_create_date_from_filename(self, trigger_filename):
-    """Uses regex to find the timestamp from the filename
-       expects the filename to be such as: [mm_dd_yyyy]/ [hh_mm_ss APM]
-
-    Args:
-        trigger_filename (str): Raw filename from Five9
-
-    Raises:
-        Exception: Could not find timestamp in filename
-    """
-    pattern = r'(\d{1,2}_\d{1,2}_\d{4})/.*@ (\d{1,2}_\d{2}_\d{2} [APM]{2})'
-
-    match = re.search(pattern, trigger_filename)
-
-    if match:
-      date_str = match.group(1)  
-      time_str = match.group(2)  
-
-      date_obj = datetime.strptime(date_str, "%m_%d_%Y")
-      formatted_date = date_obj.strftime("%Y-%m-%d")
-      self.create_date = formatted_date
-      time_obj = datetime.strptime(time_str, "%I_%M_%S %p")
-      formatted_time = time_obj.strftime("%H:%M:%SZ")
-      
-      self.metadata['create_timestamp'] = f"{formatted_date} {formatted_time}"
-    else: 
-      raise Exception('Could not find timestamp in filename')
-
-  def get_phone_number_from_filename(self, trigger_filename):
-    """Uses regex to retrieve the phone number from filename
-       expects the number to be XXXXXXXXXX
-
-    Args:
-        trigger_filename (str): Raw filename from Five9
-
-    Raises:
-        Exception: Could not find phone number in filename
-    """
-    encoding = hashlib.sha256
-
-    pattern = r'\d{10}'
-    match = re.search(pattern,  trigger_filename)
-    if match: 
-      patient_phone_number = match.group(0)
-      hashed_phone_number = hmac.new(self.hash_key, patient_phone_number.encode(), encoding).hexdigest()
-      self.metadata['patient_id'] = hashed_phone_number
-    else:
-      raise Exception('Could not find phone number in filename')
-
   def get_audio_metadata(self,audio_path):
     """Calls a ffmpeg command to extract the audio metadata, such as streams, sample rate, channels, etc.
 
@@ -278,8 +217,6 @@ class AudioFormatterRunner:
     """
 
     self.extract_metadata_from_file()
-    # self.get_create_date_from_filename(trigger_filename)
-    # self.get_phone_number_from_filename(trigger_filename)
 
     filename =  filename.replace(self.raw_audio_file_extension, 'json')
 
@@ -330,7 +267,7 @@ class AudioFormatterRunner:
     entry['message'] = 'Audio format change failure'
     entry['error'] = error_message
     entry['raw_file_gcs_path'] = 'gs://{}/{}'.format(self.raw_audio_bucket_id, self.raw_audio_file_name)
-    entry['hashed_filename'] = self.metadata['five9_filename']
+    entry['hashed_filename'] = self.metadata['original_file_name']
 
     return entry
 
@@ -384,9 +321,8 @@ class AudioFormatterRunner:
         Modify the parquet file to keep track of the pipeline step status
     """
     filename, trigger_file = self.download_from_gcs()
-    self.get_case_manager_from_filename(trigger_file)
 
-    self.record_keeper = RecordKeeper(self.ingest_record_bucket_id, self.metadata['five9_filename'], self.storage_client)
+    self.record_keeper = RecordKeeper(self.ingest_record_bucket_id, self.metadata['original_file_name'], self.storage_client)
     
     try:
       self.record_keeper.verify_file()

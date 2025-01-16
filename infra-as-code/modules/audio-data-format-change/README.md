@@ -1,7 +1,7 @@
 ## Create the Buckets
-Incoming raw audio files from Five9 are GSM6.10 wave file format. Format change is required to be ingested by CCAI Speech-to-text. Outputs of the script will be stored in separate buckets different from the landing bucket.
+If incoming raw audio files are not in flac file format, format change is required to be ingested by CCAI Speech-to-text. Outputs of the script will be stored in separate buckets different from the landing bucket.
 
-`five9-audio-files`: Landing bucket for the raw Five9 audio files
+`original-audio-files`: Landing bucket for the raw audio files
 `formatted-audio-files`: Intermediate bucket to store formatted audio files
 `formatted-audio-metadata`: Intermediate bucket to store formatted audio metadata
 
@@ -27,6 +27,6 @@ As this variable is not supported, the default service account used is the Defau
 |service_account_email|Service Account used as identity by the Cloud Function|`string`|Yes|||
 |cf_bucket_name|Bucket name to use for storing the Cloud Function bundle|`string`|Yes|||
 |function_name|Cloud Function name|`string`|Yes||`audio-format-change`|
-|trigger_bucket_name|Name of the bucket which triggers the Cloud Function|`string`|Yes||`five9-audio-files`|
-|hex_key| Name of the secret in secret manager for the hashing key value| `string` | Yes |  | `five9-filename-key` |
+|trigger_bucket_name|Name of the bucket which triggers the Cloud Function|`string`|Yes||`original-audio-files`|
+|hex_key| Name of the secret in secret manager for the hashing key value| `string` | Yes |  | `original-filename-key` |
 |ingest_record_bucket_id|Bucket ID where the parquet for record keeping is|`string`|Yes||`ingest-record-bucket`|

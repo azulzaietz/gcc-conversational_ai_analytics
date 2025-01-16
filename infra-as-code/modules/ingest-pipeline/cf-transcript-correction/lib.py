@@ -34,7 +34,7 @@ class GenAIFixer:
     formatted_audio_file_name, 
     formatted_audio_bucket_id,
     ingest_record_bucket_id,
-    five9_filename,
+    original_file_name,
     client_specific_constraints,
     client_specific_context,
     few_shot_examples
@@ -55,8 +55,8 @@ class GenAIFixer:
     self.original_transcript = self.download_from_gcs(self.transcript_bucket_id, self.transcript_file_name)
     self.transcript = self.extract_transcripts(self.original_transcript)
 
-    self.record_keeper = RecordKeeper(ingest_record_bucket_id, five9_filename, self.storage_client)
-    self.event_dict['five9_filename'] = five9_filename
+    self.record_keeper = RecordKeeper(ingest_record_bucket_id, original_file_name, self.storage_client)
+    self.event_dict['original_file_name'] = original_file_name
 
     self.client_specific_constraints = client_specific_constraints
     self.client_specific_context = client_specific_context

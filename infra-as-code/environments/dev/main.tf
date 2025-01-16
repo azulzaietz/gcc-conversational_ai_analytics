@@ -86,7 +86,7 @@ module "ccai_insights_ingest_pipeline" {
 module "trigger_bucket" {
   source     = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/gcs?ref=v31.1.0&depth=1"
   project_id = var.project_id
-  name     = "five9-audio-files-${random_id.bucket_ext.id}-${var.env}"
+  name     = "original-audio-files-${random_id.bucket_ext.id}-${var.env}"
   location = var.region # The trigger must be in the same location as the bucket
   storage_class = "REGIONAL"
   versioning = true
